@@ -35,6 +35,47 @@ let contact = new Schema({
 
 
 
+router.post('/', function (req, res, next) {
+  let addContact = new contactModel({
+    name: req.body.name,
+    phone: req.body.phone,
+    email: req.body.email
+  });
+  addContact.save(function (err, result) {
+    if (err) return handleError(err);
+    res.status(200).send(result);
+  })
+});
+
+
+
+router.get('/:id', function (req, res, next) {
+  let id = req.params.id;
+  contactModel.findById(id, (function (err, result) {
+    if (err) throw err;
+    res.send(result);
+  }));
+});
+
+
+router.put('/:id', function (req, res, next) {
+  let id = req.params.id;
+  contactModel.findOneAndUpdate({ _id: id }, req.body, { new: true }, function (err, result) {
+    if (err)
+      res.send(err);
+    res.send('Contact Updated');
+  });
+});
+
+
+router.delete('/', function (req, res, next) {
+  contactModel.remove({ _id: req.body.id }, function (err, result) {
+    if (err)
+      res.send(err);
+    res.send('Contact deleted');
+  });
+});
+
 
 
 
